@@ -1,5 +1,8 @@
 
+# --------------------------------------------------
 # Existing Azure Public IP
+# --------------------------------------------------
+
 resource "azurerm_public_ip" "this" {
   name                = var.public_ip_name
   resource_group_name = var.resource_group_name
@@ -12,7 +15,10 @@ resource "azurerm_public_ip" "this" {
   idle_timeout_in_minutes = 4
 }
 
+# --------------------------------------------------
 # Existing Azure VM Network Interface
+# --------------------------------------------------
+
 resource "azurerm_network_interface" "this" {
   name                = var.nic_name
   resource_group_name = var.resource_group_name
@@ -30,7 +36,10 @@ resource "azurerm_network_interface" "this" {
   }
 }
 
+# --------------------------------------------------
 # Existing Azure Ubuntu Linux Virtual Machine
+# --------------------------------------------------
+
 resource "azurerm_linux_virtual_machine" "this" {
   name                = var.vm_name
   resource_group_name = var.resource_group_name
@@ -44,14 +53,23 @@ resource "azurerm_linux_virtual_machine" "this" {
     azurerm_network_interface.this.id
   ]
 
+  # Authentication and VM Agent
   disable_password_authentication = true
   provision_vm_agent              = true
 
+  # Preserve existing Azure VM capabilities
+  additional_capabilities {
+    hibernation_enabled = false
+    ultra_ssd_enabled   = false
+  }
+
+  # SSH Authentication
   admin_ssh_key {
     username   = var.admin_username
     public_key = var.ssh_public_key
   }
 
+  # Operating System Disk
   os_disk {
     name                 = var.os_disk_name
     caching              = var.os_disk_caching
@@ -59,6 +77,7 @@ resource "azurerm_linux_virtual_machine" "this" {
     disk_size_gb         = var.os_disk_size_gb
   }
 
+  # Ubuntu Image
   source_image_reference {
     publisher = var.image_publisher
     offer     = var.image_offer
@@ -66,14 +85,18 @@ resource "azurerm_linux_virtual_machine" "this" {
     version   = var.image_version
   }
 
+  # Trusted Launch Security
   secure_boot_enabled = true
   vtpm_enabled        = true
 
+  # OS Patch Management
   patch_mode            = "ImageDefault"
   patch_assessment_mode = "ImageDefault"
 
+  # Azure Managed Boot Diagnostics
   boot_diagnostics {}
 
+  # Prevent accidental VM destruction or replacement
   lifecycle {
     prevent_destroy = true
   }
