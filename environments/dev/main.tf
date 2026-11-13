@@ -96,3 +96,24 @@ resource "azurerm_subnet_network_security_group_association" "this" {
   subnet_id                 = module.networking.subnet_ids[each.key]
   network_security_group_id = module.security.nsg_ids[each.value]
 }
+
+# Existing Azure Compute Infrastructure
+module "compute" {
+  source = "../../modules/compute"
+
+  resource_group_name = var.resource_group_name
+  location            = var.location
+
+  vm_name        = "vm-app-dev-01"
+  vm_size        = "Standard_F1als_v7"
+  admin_username = "azureuser"
+
+  nic_name       = "vm-app-dev-01121"
+  public_ip_name = "pip-vm-app-dev-01"
+
+  subnet_id = module.networking.subnet_ids["snet-app-dev"]
+
+  ssh_public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIZGDZ0w6txblP0lijbFJoOu2Y2WbF/EUsugsSJEj6xt generated-by-azure"
+
+  os_disk_name = "vm-app-dev-01_OsDisk_1_bb6e9886a0bb4f0fb902719d7ac88abb"
+}
