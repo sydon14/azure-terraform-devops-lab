@@ -1,3 +1,4 @@
+
 resource "azurerm_network_security_group" "this" {
   for_each = var.network_security_groups
 
@@ -10,6 +11,7 @@ resource "azurerm_network_security_rule" "this" {
   for_each = var.security_rules
 
   name                        = each.value.name
+  description                 = each.value.description
   priority                    = each.value.priority
   direction                   = each.value.direction
   access                      = each.value.access

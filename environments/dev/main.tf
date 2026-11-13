@@ -33,6 +33,7 @@ module "security" {
   security_rules = {
     "app-ssh" = {
       name                       = "Allow-SSH-MyIP"
+      description                = "Allow SSH access to Azure DevOps lab VM from my public IP only"
       nsg_name                   = "nsg-app-dev"
       priority                   = 100
       direction                  = "Inbound"
@@ -46,6 +47,7 @@ module "security" {
 
     "app-http" = {
       name                       = "Allow-HTTP-MyIP"
+      description                = "Allow HTTP access from my Mac for lab testing"
       nsg_name                   = "nsg-app-dev"
       priority                   = 110
       direction                  = "Inbound"

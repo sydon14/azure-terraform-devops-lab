@@ -1,3 +1,4 @@
+
 variable "resource_group_name" {
   description = "Name of the Azure resource group containing the NSGs."
   type        = string
@@ -18,6 +19,7 @@ variable "security_rules" {
 
   type = map(object({
     name                       = string
+    description                = optional(string)
     nsg_name                   = string
     priority                   = number
     direction                  = string
