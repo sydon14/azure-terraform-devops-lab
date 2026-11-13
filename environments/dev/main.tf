@@ -17,3 +17,15 @@ module "networking" {
     }
   }
 }
+
+module "security" {
+  source = "../../modules/security"
+
+  resource_group_name = var.resource_group_name
+  location            = var.location
+
+  network_security_groups = {
+    "nsg-app-dev"  = {}
+    "nsg-data-dev" = {}
+  }
+}
