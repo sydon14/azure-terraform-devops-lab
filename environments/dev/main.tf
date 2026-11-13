@@ -84,3 +84,13 @@ module "security" {
     }
   }
 }
+
+resource "azurerm_subnet_network_security_group_association" "this" {
+  for_each = {
+    "snet-app-dev"  = "nsg-app-dev"
+    "snet-data-dev" = "nsg-data-dev"
+  }
+
+  subnet_id                 = module.networking.subnet_ids[each.key]
+  network_security_group_id = module.security.nsg_ids[each.value]
+}
