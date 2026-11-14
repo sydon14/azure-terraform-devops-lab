@@ -101,3 +101,25 @@ resource "azurerm_linux_virtual_machine" "this" {
     prevent_destroy = true
   }
 }
+
+# --------------------------------------------------
+# Existing Azure VM Automatic Shutdown Schedule
+# --------------------------------------------------
+
+resource "azurerm_dev_test_global_vm_shutdown_schedule" "this" {
+  virtual_machine_id    = azurerm_linux_virtual_machine.this.id
+  location              = var.location
+  enabled               = true
+  daily_recurrence_time = "2000"
+  timezone              = "Eastern Standard Time"
+
+  notification_settings {
+    enabled         = true
+    time_in_minutes = 30
+    email           = "sydon.agbor@atos.net"
+  }
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
